@@ -13,6 +13,18 @@ emotion_pipeline = pipeline(
 
 # Define a function that takes a piece of text and returns emotion scores
 def emotion_detector(text_to_analyze):
+
+    # Handle blank input
+    if not text_to_analyze.strip():
+        return {
+            'anger': None,
+            'disgust': None,
+            'fear': None,
+            'joy': None,
+            'sadness': None,
+            'dominant_emotion': None
+        }
+
     # Pass the input text to the emotion pipeline
     # It returns a list of dictionaries with 'label' (emotion name) and 'score' (confidence)
     # The [0] accesses the first item in the outer list because top_k=None returns a nested list

@@ -3,24 +3,22 @@ from EmotionDetection import emotion_detector
 
 app = Flask(__name__)
 
-# Route for the home page with the form (index.html)
 @app.route("/")
 def index():
     return render_template("index.html")
 
-# Route to handle emotion detection request
-@app.route("/emotionDetector", methods=["GET", "POST"])
+@app.route("/emotionDetector", methods=["POST"])
 def emotion_detection():
-    # Get the input statement from the form
     input_text = request.json.get("text", "")
-    
-    if not input_text:
-        return jsonify({"error": "No text provided"}), 400
 
-    # Get emotion analysis result
+    # Get the result from emotion_detector
     result = emotion_detector(input_text)
 
-    # Format the output for display
+    # Handle empty/invalid input
+    if result["dominant_emotion"] is None:
+        return jsonify({"emotion_result": "Invalid text! Please try again!"})
+
+    # Otherwise, format and return the result
     response_text = (
         f"For the given statement, the system response is "
         f"'anger': {result['anger']}, "
